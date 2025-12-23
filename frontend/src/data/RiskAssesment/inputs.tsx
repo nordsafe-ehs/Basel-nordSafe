@@ -2,95 +2,32 @@ import { Input } from "../../types/Sidebar";
 
 export const riskInputs: Input[] = [
   {
-    title: "Activity Details",
-    inputs: [
-      {
-        label: "Activity Name",
-        name: "activity_name",
-        type: "select",
-        size: "full",
-        options: [
-          "Site Survey and Inspection",
-          "Design and Engineering Analysis",
-          "Risk Assessment and Safety Planning",
-          "Permits and Regulatory Compliance",
-          "Site Preparation and Earthworks",
-          "Foundation Work",
-          "Construction of Main Structure",
-          "Electrical Work",
-          "Safety and Compliance",
-          "Finishing Touches",
-          "Testing and Commissioning",
-          "Ongoing Maintenance",
-          "Security Measures",
-        ],
-      },
-      {
-        label: "People Involved",
-        name: "people_involved",
-        type: "select",
-        size: "full",
-        options: [
-          "Site Engineer",
-          "Safety Officer",
-          "Supervisor",
-          "Workers",
-          "Contractors",
-          "Community Representatives",
-        ],
-      },
-    ],
-  },
-  {
-    title: "Hazard Identification",
-    inputs: [
-      {
-        label: "Identified Hazards/Risks",
-        name: "identified_hazards",
-        type: "select",
-        size: "full",
-        options: [
-          "Slips, Trips, and Falls",
-          "Electrocution",
-          "Fire or Explosion",
-          "Exposure to Hazardous Materials",
-          "Collapse of Excavation",
-          "Falling Objects",
-          "Noise and Vibration",
-          "Confined Space Hazards",
-          "Manual Handling Injuries",
-          "Environmental Hazards",
-        ],
-      },
-    ],
-  },
-  {
     title: "Risk Evaluation (Base)",
     inputs: [
       {
         label: "Likelihood (L)",
-        name: "base_likelihood",
-        type: "select",
+        name: "likelihood", // 👈 مطابق للجدول
         size: "half",
+        editable: true,
         options: ["Low", "Medium", "High"],
       },
       {
         label: "Severity (S)",
-        name: "base_severity",
-        type: "select",
+        name: "severity", // 👈 مطابق للجدول
         size: "half",
+        editable: true,
         options: ["Minor", "Moderate", "Severe", "Fatal"],
       },
       {
         label: "Risk Score",
-        name: "base_risk_score",
+        name: "riskScore", // 👈 مطابق للجدول
         type: "number",
         size: "half",
         disabled: true,
       },
       {
         label: "Risk Level",
-        name: "base_risk_level",
+        name: "riskRating", // 👈 مطابق للجدول
         type: "text",
         size: "half",
         disabled: true,
@@ -102,97 +39,31 @@ export const riskInputs: Input[] = [
     inputs: [
       {
         label: "Likelihood (L)",
-        name: "residual_likelihood",
-        type: "select",
+        name: "residualLikelihood", // 👈 مطابق للجدول
         size: "half",
+        editable: true,
         options: ["Low", "Medium", "High"],
       },
       {
         label: "Severity (S)",
-        name: "residual_severity",
-        type: "select",
+        name: "residualSeverity", // 👈 مطابق للجدول
         size: "half",
+        editable: true,
         options: ["Minor", "Moderate", "Severe", "Fatal"],
       },
       {
         label: "Risk Score",
-        name: "residual_risk_score",
+        name: "residualRiskScore", // 👈 مطابق للجدول
         type: "number",
         size: "half",
         disabled: true,
       },
       {
         label: "Risk Level",
-        name: "residual_risk_level",
+        name: "residualRiskRating", // 👈 مطابق للجدول
         type: "text",
         size: "half",
         disabled: true,
-      },
-    ],
-  },
-  {
-    title: "Control Measures",
-    inputs: [
-      {
-        label: "Control Measures",
-        name: "control_measures",
-        type: "select",
-        size: "full",
-        options: [
-          "Use PPE",
-          "Training and Awareness",
-          "Barricades and Signage",
-          "Ventilation",
-          "Emergency Response Plan",
-          "Utility Detection",
-          "Safe Storage of Materials",
-          "Fire Extinguishers",
-          "Confined Space Protocols",
-          "Dust Suppression",
-        ],
-      },
-      {
-        label: "Is Control Applied?",
-        name: "is_control_applied",
-        type: "checkbox",
-        size: "full",
-      },
-    ],
-  },
-  {
-    title: "Responsibility & Documentation",
-    inputs: [
-      {
-        label: "Person Responsible",
-        name: "person_responsible",
-        type: "select",
-        size: "full",
-        options: [
-          "Project Manager",
-          "Site Engineer",
-          "Safety Officer",
-          "Supervisor",
-          "Worker",
-        ],
-      },
-      {
-        label: "Source Document",
-        name: "source_document",
-        type: "select",
-        optional: true,
-        size: "full",
-        options: [
-          "1_Planning and design.docx",
-          "2_Site Preparation.docx",
-          "3_Foundation work for constructions.docx",
-          "4_Construction of the main structure.docx",
-          "5_Electrical work.docx",
-          "6_Safety and compliance.docx",
-          "7_Finishing touches.docx",
-          "8_Testing and commissioning.docx",
-          "9_Ongoing maintenance.docx",
-          "10_Security measures.docx",
-        ],
       },
     ],
   },

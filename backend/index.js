@@ -13,7 +13,12 @@ const subscriptionsRoutes = require("./routes/subscriptions");
 const companiesRoutes = require("./routes/companies");
 //const projectModuleRoutes = require("./routes/ProjectModuleRoute");
 const riskEvaluationRoutes = require("./routes/risk-evaluations");
-const meetingRoutes = require("./routes/meetingRoutes");
+const riskParticipantsRoutes = require("./routes/Riskparticipants");
+//metting
+const meetingsRoutes = require("./routes/meetingsٌRoute");
+const agendaRoutes = require("./routes/agendaMetting");
+const attendanceRoutes = require("./routes/AttendanceMetting");
+const attecmentMettingRoutes = require("./routes/AttechmentsRouteMetting");
 
 const { BasePlans } = require("./models");
 
@@ -105,7 +110,13 @@ app.use("/api/subscriptions", subscriptionsRoutes);
 app.use("/api/companies", companiesRoutes);
 // app.use("/api/project-modules", projectModuleRoutes);
 app.use("/api/risk-evaluations", riskEvaluationRoutes);
-app.use("/api/meetings", meetingRoutes);
+app.use("/api/participants", riskParticipantsRoutes);
+
+//metting
+app.use("/api/meetings", meetingsRoutes);
+app.use("/api/agenda", agendaRoutes);
+app.use("/api/attendance", attendanceRoutes);
+app.use("/api/attachments", attecmentMettingRoutes);
 
 const PORT = process.env.PORT || 3000;
 

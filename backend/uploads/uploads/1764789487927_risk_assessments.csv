@@ -1,0 +1,6 @@
+ID,Activity,Identified Hazards/Risks,People Involved,L (Base),S (Base),Risk Score (Base),Risk Level (Base),Control Measures,L (Residual),S (Residual),Risk Score (Residual),Risk Level (Residual),Person Responsible
+24,Electrical Work,Collapse of Excavation,Workers,4,5,20,High,Utility Detection,5,4,20,High,Safety Officer
+26,Construction of Main Structure,Noise and Vibration,Contractors,4,1,4,Low,Emergency Response Plan,5,5,25,High,Safety Officer
+27,Electrical Work,Noise and Vibration,Site Engineer,5,5,25,High,Emergency Response Plan,1,1,1,Low,Site Engineer
+28,Finishing Touches,Noise and Vibration,Supervisor,3,3,9,Medium,Training and Awareness,1,1,1,Low,Safety Officer
+29,ثثثثث,aaaaaaa,Safety Officer,1,1,1,Low,aaaaaaa,5,2,10,Medium,Worker

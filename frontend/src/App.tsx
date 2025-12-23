@@ -21,7 +21,6 @@ const App = () => {
 
   return (
     <Routes>
-
       <Route
         path="/auth/login"
         element={token ? <Navigate to={mainRoute} /> : <Login />}
@@ -66,7 +65,7 @@ const renderRoutes = (
         );
 
       return (
-        <Fragment key={i}>
+        <Fragment  key={i}>
           <Route
             key={i}
             path={href}

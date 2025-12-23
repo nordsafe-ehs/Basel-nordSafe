@@ -94,7 +94,7 @@ export default function InstallPWA() {
       {canInstall ? (
         <Button
           variant="contained"
-          startIcon={<DownloadIcon />}
+          startIcon={<DownloadIcon  />}
           size="large"
           onClick={handleInstallClick}
         >

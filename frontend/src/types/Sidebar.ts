@@ -17,6 +17,7 @@ export interface Input {
   type?:
     | "text"
     | "select"
+    | "custom"
     | "textarea"
     | "file"
     | "radio"
@@ -27,7 +28,8 @@ export interface Input {
     | "location"
     | "assign"
     | "hidden"
-    | "checkbox";
+    | "checkbox"
+    | "signature";
   options?: Option[] | FetchedOption;
   onValue?: {
     [key: string]: Input[];
@@ -45,6 +47,7 @@ export interface Input {
   parent?: Input;
   height?: "small" | "medium";
   readonly?: boolean;
+  component?: ReactNode;
 }
 export interface Form {
   inputs: Input[];
@@ -111,6 +114,10 @@ export interface LinkType {
     href: string;
     icon: ReactNode;
   };
+
+
+
+ 
   showOnBottomList?: boolean;
   // keyValueColors?: {
   //   key: string;

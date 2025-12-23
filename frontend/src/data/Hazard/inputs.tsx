@@ -1,9 +1,11 @@
+import { TextField } from "@mui/material";
 import RiskLevel from "../../components/RiskLevel";
 import { Input } from "../../types/Sidebar";
 
 export const hazardInputs: Input[] = [
   {
     title: "Deviation Details",
+
     inputs: [
       {
         label: "Date Observed",

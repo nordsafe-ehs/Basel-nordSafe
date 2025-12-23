@@ -1,149 +1,222 @@
 const express = require("express");
+const RiskAssessment = require("../models/RiskEvaluation");
+
 const router = express.Router();
-const { RiskEvaluation } = require("../models");
-const authMiddleware = require("../middleware/authMiddleware");
 
-router.use(authMiddleware);
+function calculateRisk(likelihood, severity) {
+  const l = Number(likelihood);
+  const s = Number(severity);
+  const riskScore = l * s;
 
-// 🔎 دالة مساعدة لحساب القيم
-function calculateRiskLevels(body) {
-  const baseLikelihood = Number(body.base_likelihood) || 0;
-  const baseSeverity = Number(body.base_severity) || 0;
-  const residualLikelihood = Number(body.residual_likelihood) || 0;
-  const residualSeverity = Number(body.residual_severity) || 0;
+  let riskRating = "Low";
+  if (riskScore >= 15) riskRating = "High";
+  else if (riskScore >= 8) riskRating = "Medium";
 
-  const baseScore = baseLikelihood * baseSeverity;
-  const residualScore = residualLikelihood * residualSeverity;
-
-  const baseLevel =
-    baseScore >= 15 ? "High" : baseScore >= 9 ? "Medium" : "Low";
-  const residualLevel =
-    residualScore >= 15 ? "High" : residualScore >= 9 ? "Medium" : "Low";
-
-  return {
-    ...body,
-    base_risk_score: baseScore,
-    base_risk_level: baseLevel,
-    residual_risk_score: residualScore,
-    residual_risk_level: residualLevel,
-  };
+  return { riskScore, riskRating };
 }
 
-// ✅ GET all evaluations
+function calculateResidualRisk(residualLikelihood, residualSeverity) {
+  const l = Number(residualLikelihood);
+  const s = Number(residualSeverity);
+  const riskScore = l * s;
+
+  let riskRating = "Low";
+  if (riskScore >= 15) riskRating = "High";
+  else if (riskScore >= 8) riskRating = "Medium";
+
+  return { riskScore, riskRating };
+}
+
+// 🟢 Get all risk assessments
 router.get("/", async (req, res) => {
   try {
-    const evaluations = await RiskEvaluation.findAll({
-      order: [["id", "ASC"]],
-    });
-    return res.json({ success: true, data: evaluations });
+    const risks = await RiskAssessment.findAll();
+    res.json(risks);
   } catch (err) {
-    console.error("Fetch error:", err);
-    return res
-      .status(500)
-      .json({
-        success: false,
-        error: "Failed to fetch evaluations",
-        details: err.message,
-      });
+    res.status(500).json({ error: err.message });
   }
 });
 
-// ✅ GET single evaluation
+// 🟢 Get single risk assessment by ID
 router.get("/:id", async (req, res) => {
   try {
-    const evaluation = await RiskEvaluation.findByPk(req.params.id);
-    if (!evaluation)
-      return res.status(404).json({ success: false, error: "Not found" });
-    return res.json({ success: true, data: evaluation });
+    const risk = await RiskAssessment.findByPk(req.params.id);
+    if (!risk)
+      return res.status(404).json({ error: "Risk assessment not found" });
+    res.json(risk);
   } catch (err) {
-    console.error("Fetch single error:", err);
-    return res
-      .status(500)
-      .json({
-        success: false,
-        error: "Failed to fetch evaluation",
-        details: err.message,
-      });
+    res.status(500).json({ error: err.message });
   }
 });
 
-// ✅ POST new evaluation (مع حساب تلقائي)
-router.post("/", async (req, res) => {
-  try {
-    console.log("Received payload:", req.body);
-    const payload = calculateRiskLevels(req.body);
-    const evaluation = await RiskEvaluation.create(payload);
-    return res
-      .status(201)
-      .json({
-        success: true,
-        message: "Evaluation created successfully",
-        data: evaluation,
-      });
-  } catch (err) {
-    console.error("Error creating evaluation:", err);
-    return res
-      .status(400)
-      .json({
-        success: false,
-        error: "Failed to create evaluation",
-        details: err.message,
-      });
-  }
-});
+// 🟢 Create new risk assessment
+// router.post("/", async (req, res) => {
+//   try {
+//     const risk = await RiskAssessment.create(req.body);
+//     res.status(201).json(risk);
+//   } catch (err) {
+//     res.status(400).json({ error: err.message });
+//   }
+// });
 
-// ✅ PUT update evaluation (مع حساب تلقائي)
+// // 🟢 Update risk assessment
+// router.put("/:id", async (req, res) => {
+//   try {
+//     const [updated] = await RiskAssessment.update(req.body, {
+//       where: { id: req.params.id },
+//     });
+
+//     if (!updated) {
+//       return res.status(404).json({ error: "Risk assessment not found" });
+//     }
+
+//     // ✅ رجّع الصف المحدث
+//     const updatedRow = await RiskAssessment.findByPk(req.params.id);
+//     return res.json(updatedRow);
+//   } catch (err) {
+//     console.error("err update is", err);
+//     res.status(400).json({ error: err.message });
+//   }
+// });
+
 router.put("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id, 10);
-    if (isNaN(id))
-      return res.status(400).json({ success: false, error: "Invalid id" });
+    const {
+      likelihood,
+      severity,
+      residualLikelihood,
+      residualSeverity,
+      ...rest
+    } = req.body;
 
-    const payload = calculateRiskLevels(req.body);
-    const [updated] = await RiskEvaluation.update(payload, { where: { id } });
-    if (!updated)
-      return res.status(404).json({ success: false, error: "Not found" });
+    const { riskScore, riskRating } = calculateRisk(likelihood, severity);
+    const { riskScore: residualRiskScore, riskRating: residualRiskRating } =
+      calculateResidualRisk(residualLikelihood, residualSeverity);
 
-    const evaluation = await RiskEvaluation.findByPk(id);
-    return res.json({
-      success: true,
-      message: "Updated successfully",
-      data: evaluation.toJSON(),
-    });
+    await RiskAssessment.update(
+      {
+        ...rest,
+        likelihood,
+        severity,
+        riskScore,
+        riskRating,
+        residualLikelihood,
+        residualSeverity,
+        residualRiskScore,
+        residualRiskRating,
+      },
+      { where: { id: Number(req.params.id) } }
+    );
+
+    const updatedRow = await RiskAssessment.findByPk(req.params.id);
+    res.json(updatedRow);
   } catch (err) {
-    console.error("Update error:", err);
-    return res
-      .status(500)
-      .json({
-        success: false,
-        error: "Failed to update evaluation",
-        details: err.message,
-      });
+    res.status(400).json({ error: err.message });
   }
 });
 
-// ✅ DELETE evaluation
+router.post("/", async (req, res) => {
+  try {
+    const {
+      likelihood,
+      severity,
+      residualLikelihood,
+      residualSeverity,
+      ...rest
+    } = req.body;
+
+    const { riskScore, riskRating } = calculateRisk(likelihood, severity);
+    const { riskScore: residualRiskScore, riskRating: residualRiskRating } =
+      calculateResidualRisk(residualLikelihood, residualSeverity);
+
+    const newRisk = await RiskAssessment.create({
+      ...rest,
+      likelihood,
+      severity,
+      riskScore,
+      riskRating,
+      residualLikelihood,
+      residualSeverity,
+      residualRiskScore,
+      residualRiskRating,
+    });
+
+    res.json(newRisk);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 🟢 Delete risk assessment
+// داخل الراوتر
 router.delete("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id, 10);
-    if (isNaN(id))
-      return res.status(400).json({ success: false, error: "Invalid id" });
-
-    const deleted = await RiskEvaluation.destroy({ where: { id } });
-    if (!deleted)
-      return res.status(404).json({ success: false, error: "Not found" });
-
-    return res.json({ success: true, message: "Deleted successfully", id });
+    const id = req.params.id;
+    const deleted = await RiskAssessment.destroy({ where: { id } });
+    if (!deleted) {
+      return res.status(404).json({ message: "Not found" });
+    }
+    return res.status(204).send();
   } catch (err) {
     console.error("Delete error:", err);
-    return res
-      .status(500)
-      .json({
-        success: false,
-        error: "Failed to delete evaluation",
-        details: err.message,
-      });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+router.put("/:id", async (req, res) => {
+  try {
+    const [updated] = await RiskAssessment.update(req.body, {
+      where: { id: req.params.id },
+    });
+
+    if (!updated) {
+      return res.status(404).json({ error: "Risk assessment not found" });
+    }
+
+    // رجّع البيانات المحدثة (اختياري: اعمل findByPk مرة ثانية)
+    const risk = await RiskAssessment.findByPk(req.params.id);
+    res.json(risk);
+  } catch (err) {
+    console.error("err update is", err);
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// داخل router
+router.get("/chart", async (req, res) => {
+  try {
+    const risks = await RiskAssessment.findAll({
+      attributes: ["revisionDate", "riskScore", "residualRiskScore"],
+      order: [["revisionDate", "ASC"]],
+    });
+
+    const formatted = [
+      {
+        id: "Risk Score",
+        color: "#003f5c",
+        data: risks.map((r) => ({
+          x: r.revisionDate,
+          y: r.riskScore,
+        })),
+      },
+      {
+        id: "Residual Risk",
+        color: "#0CB283",
+        data: risks.map((r) => ({
+          x: r.revisionDate,
+          y: r.residualRiskScore,
+        })),
+      },
+    ];
+
+    res.json(formatted);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+
+
 
 module.exports = router;

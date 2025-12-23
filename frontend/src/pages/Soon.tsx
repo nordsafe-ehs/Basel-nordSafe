@@ -1,185 +1,198 @@
-import { useState, useRef } from "react";
-import { TextField, Button, Grid, Typography } from "@mui/material";
-import SignatureCanvas from "react-signature-canvas";
+import React, { useState } from "react";
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Grid,
+  Box,
+  Typography,
+} from "@mui/material";
 import { API_URL } from "../API_URL";
-import { useToken } from "../hooks/useToken";
+import axios from "axios";
 
-const Soon = () => {
-  const [form, setForm] = useState({
-    company_name: "",
-    document_reference: "",
-    rev_no: "",
-    rev_date: "",
-    assessed_by: "",
-    title: "Safety Officer",
-    signature: "",
+export default function AddFormDialog({ onCreated }) {
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    documentId: "",
+    title: "",
+    projectNumber: "",
+    projectName: "",
+    client: "",
+    contract: "",
+    projectManager: "",
+    revisionNo: "",
+    preparedBy: "",
+    approvedBy: "",
   });
 
-  const { token } = useToken();
-  const sigCanvas = useRef(null);
+  const [records, setRecords] = useState<any[]>([]);
+
+  // تحديث التوقيع من SignatureField
+  // const handleSignatureChange = (name: string, value: string) => {
+  //   setFormData({ ...formData, [name]: value });
+  // };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const clearSignature = () => {
-    sigCanvas.current?.clear();
-    setForm((prev) => ({ ...prev, signature: "" }));
-  };
-
-  const saveSignature = () => {
-    const data = sigCanvas.current?.toDataURL();
-    setForm((prev) => ({ ...prev, signature: data || "" }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async () => {
     try {
-      const payload = { ...form };
-      console.log("payload is", payload);
+      const res = await axios.post(`${API_URL}/participants`, formData);
+  if (onCreated) {
+    onCreated(res.data.documentId); // يرسل الـ documentId للـ parent
+  }      console.log("Form submitted:", res.data);
+      alert("Successfully created ✅");
 
-      const res = await fetch(`${API_URL}/risk-evaluations`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
+      setRecords([...records, formData]);
+      setOpen(false);
+      setFormData({
+        documentId: "",
+        title: "",
+        projectNumber: "",
+        projectName: "",
+        client: "",
+        contract: "",
+        projectManager: "",
+        revisionNo: "",
+        preparedBy: "",
+        approvedBy: "",
       });
-
-      const contentType = res.headers.get("content-type");
-      let data: any;
-      if (contentType && contentType.includes("application/json")) {
-        data = await res.json();
-      } else {
-        const text = await res.text();
-        console.error("Non-JSON response:", text);
-        alert(`❌ Server returned non-JSON response: ${text}`);
-        return;
-      }
-
-      if (!res.ok) {
-        console.error("Backend error:", data);
-        alert(`❌ Error: ${data.error || data.message || "Failed to save"}`);
-        return;
-      }
-
-      alert("✅ Saved successfully");
-      setForm({
-        company_name: "",
-        document_reference: "",
-        rev_no: "",
-        rev_date: "",
-        assessed_by: "",
-        title: "Safety Officer",
-        signature: "",
-      });
-      sigCanvas.current?.clear();
-    } catch (err) {
-      console.error("err", err);
-      alert("❌ An error occurred");
+    } catch (error: any) {
+      console.error("Error submitting form:", error);
+      alert("error ❌: " + error.message);
     }
   };
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <Typography variant="h6">Basic Risk Assessment Info</Typography>
-      </Grid>
-
-      <Grid item xs={12}>
-        <TextField
-          fullWidth
-          label="Company Name"
-          name="company_name"
-          value={form.company_name}
-          onChange={handleChange}
-        />
-      </Grid>
-
-      <Grid item xs={12}>
-        <TextField
-          fullWidth
-          label="Document Reference"
-          name="document_reference"
-          value={form.document_reference}
-          onChange={handleChange}
-        />
-      </Grid>
-
-      <Grid item xs={6}>
-        <TextField
-          fullWidth
-          label="Revision No."
-          name="rev_no"
-          value={form.rev_no}
-          onChange={handleChange}
-        />
-      </Grid>
-
-      <Grid item xs={6}>
-        <TextField
-          fullWidth
-          label="Revision Date"
-          name="rev_date"
-          type="date"
-          InputLabelProps={{ shrink: true }}
-          value={form.rev_date}
-          onChange={handleChange}
-        />
-      </Grid>
-
-      <Grid item xs={12}>
-        <TextField
-          fullWidth
-          label="Assessed By"
-          name="assessed_by"
-          value={form.assessed_by}
-          onChange={handleChange}
-        />
-      </Grid>
-
-      <Grid item xs={12}>
-        <TextField
-          fullWidth
-          label="Title"
-          name="title"
-          value={form.title}
-          disabled
-        />
-      </Grid>
-
-      <Grid item xs={12}>
-        <Typography variant="subtitle1">Signature</Typography>
-        <SignatureCanvas
-          ref={sigCanvas}
-          penColor="black"
-          canvasProps={{
-            width: 500,
-            height: 200,
-            className: "sigCanvas",
-            style: { backgroundColor: "#f5f5f5", border: "1px solid #ccc" },
-          }}
-        />
+    <>
+      <Box display="flex" justifyContent="flex-end" sx={{ mt: 2 }}>
         <Button
-          onClick={saveSignature}
-          variant="outlined"
-          sx={{ mt: 1, mr: 1 }}
+          variant="contained"
+          onClick={() => setOpen(true)}
+          sx={{ background: "#172E4E ", color: "#fff" }}
         >
-          Save Signature
+          Add New
         </Button>
-        <Button onClick={clearSignature} variant="outlined" sx={{ mt: 1 }}>
-          Clear
-        </Button>
-      </Grid>
+      </Box>
 
-      <Grid item xs={12}>
-        <Button variant="contained" onClick={handleSubmit}>
-          Save
-        </Button>
-      </Grid>
-    </Grid>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        sx={{ overflow: "hidden" }}
+        maxWidth="sm"
+      >
+        <DialogContent sx={{ background: "#F0FFF8", color: "black" }}>
+          <DialogTitle sx={{ textAlign: "center", fontWeight: "bold" }}>
+            General Information
+          </DialogTitle>
+          <Grid container spacing={2} sx={{ mt: 1 }}>
+            {Object.keys(formData).map((key) => (
+              <Grid item xs={6} key={key}>
+                <TextField
+                  sx={{ background: "white" }}
+                  label={key.replace(/([A-Z])/g, " $1")}
+                  name={key}
+                  value={(formData as any)[key]}
+                  onChange={handleChange}
+                  fullWidth
+                />
+              </Grid>
+            ))}
+          </Grid>
+          {/* <Box sx={{ mt: 3 }}>
+            <Typography fontWeight="bold" mb={1}>
+              Responsible Signature
+            </Typography>
+            <SignatureField
+              name="signatureUrl"
+              value={formData.signatureUrl}
+              onChange={handleSignatureChange}
+            />
+          </Box> */}
+        </DialogContent>
+        <DialogActions
+          sx={{
+            background: "#F0FFF8",
+            display: "flex",
+            py: 1,
+            justifyContent: "center",
+          }}
+        >
+          <Button
+            sx={{
+              background: "#172E4E",
+              color: "white",
+              px: 9,
+              borderRadius: 4,
+            }}
+            variant="contained"
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Box sx={{ mt: 3 }}>
+        {records.map((record, index) => (
+          <Box
+            key={index}
+            sx={{
+              mb: 2,
+              p: 2,
+              borderRadius: "6px",
+              background: "#F0FFF8",
+            }}
+          >
+            <Typography variant="h5" fontWeight={"bold"} mb={1} sx={{ mb: 1 }}>
+              General Information
+            </Typography>
+            <Grid container spacing={1}>
+              <Grid item xs={6}>
+                <Typography mb={1}>
+                  <strong>Document ID:</strong> {record.documentId}
+                </Typography>
+                <Typography mb={1}>
+                  <strong>Project number:</strong> {record.projectNumber}
+                </Typography>
+                <Typography mb={1}>
+                  <strong>Client:</strong> {record.client}
+                </Typography>
+                <Typography mb={1}>
+                  <strong>Project manager:</strong> {record.projectManager}
+                </Typography>
+                <Typography mb={1}>
+                  <strong>Prepared by:</strong> {record.preparedBy}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography mb={1}>
+                  <strong>Title:</strong> {record.title}
+                </Typography>
+                <Typography mb={1}>
+                  <strong>Project name:</strong> {record.projectName}
+                </Typography>
+                <Typography mb={1}>
+                  <strong>Contract:</strong> {record.contract}
+                </Typography>
+                <Typography mb={1}>
+                  <strong>Revision no.:</strong> {record.revisionNo}
+                </Typography>
+                <Typography mb={1}>
+                  <strong>Approved by:</strong> {record.approvedBy}
+                </Typography>
+                {/* <Typography mb={1}>
+                  <strong>Signature is:</strong> {record.signatureUrl}
+                </Typography> */}
+              </Grid>
+            </Grid>
+          </Box>
+        ))}
+      </Box>
+    </>
   );
-};
-
-export default Soon;
+}

@@ -41,7 +41,22 @@ import { usersInputs } from "./Users/inputs";
 import { riskInputs } from "./RiskAssesment/inputs";
 import { riskColumns } from "./RiskAssesment/column";
 import RiskAssessment from "../components/RiskAssessment";
-import MeetingForm from "../components/MinutesOfMitting";
+import MeetingTable from "../pages/MeetingTable";
+import { meetingInputs } from "./Metting/Inputs";
+// import MeetingForm from "../components/MeetingForm";
+// import MettingsTabs from "../components/MettingsTabs";
+// import SessionDetailsForm from "../components/SeasionDetails";
+import TabsSection from "../components/MettingsTabs";
+import EquipmentControl from "../pages/EquipmentControl";
+import { equipmentControls } from "./EquipmentControl";
+//import { sjaChecklist } from "./SjaChecklist/forms/JsaInput";
+import { JsaController } from "./SjaChecklist";
+import { ToolboxController } from "./Toolbox";
+import BasicTabsRiskAssesment from "../components/TabsRisk";
+import SafetyToolsLayout from "../components/SafetyToolsLayout";
+import QrCode2Icon from "@mui/icons-material/QrCode2";
+import ParticipantsTable from "../components/ParticipantTable";
+import MeetingList from "./Metting/column";
 
 export const links: LinkType[] = [
   {
@@ -57,7 +72,7 @@ export const links: LinkType[] = [
     type: "links",
     hideOnSidebar: true,
     layout: SettingsLayout,
-    permissions: ["admin", "super-admin"],
+    //permissions: ["admin", "super-admin"],
     links: [
       {
         text: "Projects",
@@ -87,7 +102,7 @@ export const links: LinkType[] = [
         ],
       },
       {
-        permissions: ["super-admin"],
+        //permissions: ["super-admin"],
         text: "Users",
         href: "/company-settings/users",
         layout: SettingsLayout,
@@ -99,7 +114,7 @@ export const links: LinkType[] = [
         icon: <GroupRounded />,
         links: [
           {
-            permissions: ["super-admin"],
+            //permissions: ["super-admin"],
             text: "Add a new user",
             href: "/company-settings/users/add",
             type: "form",
@@ -118,7 +133,7 @@ export const links: LinkType[] = [
         icon: <ReceiptLongRounded />,
         component: <Subscription />,
         layout: SettingsLayout,
-        permissions: ["super-admin"],
+        //permissions: ["super-admin"],
       },
     ],
   },
@@ -168,45 +183,33 @@ export const links: LinkType[] = [
     ],
   },
   {
-    text: "Site Monitoring",
-    desc: "Supports real-time inspections to ensure ongoing safety compliance. Supervisors can perform scheduled or random inspections and assign actions on the spot.",
+    text: "Risk Assessment",
+    href: "/risk-assessment",
+    type: "custom",
+    icon: <AssessmentRounded />,
+    component: <ParticipantsTable />,
+    inputs: riskInputs,
+    columns: riskColumns,
+
+    addHref: "/risk-assessment/evaluate",
+    viewLink: (id) => `/risk-assessment/${id}`,
+    editLink: (id) => `/risk-assessment/evaluate/${id}`,
+
+    desc: "Nordsafe Risk Assessment helps identify, evaluate, and control workplace risks.Easily document hazards and assign corrective actions. Prioritize risks using clear scoring and ranking methods.Ensure compliance with industry standards and regulations.Make better decisions with data - driven risk insights.",
     features: [
-      "Custom inspection checklists.",
-      "Real-time findings with photos ",
-      "Assign corrective actions directly.",
-      "Trend analysis and KPI dashboard.",
+      "Hazard identification and documentation",
+      "Risk scoring and prioritization",
+      "Customizable assessment templates",
+      "Assign actions and track completion",
+      "Reporting and trend analysis",
     ],
-    href: "/site-monitoring",
-    type: "list",
-    inputs: siteMonitoringInputs,
-    columns: siteMonitoringColumns,
-    addHref: "/site-monitoring/report",
-    viewLink: (id) => `/site-monitoring/${id}`,
-    editLink: (id) => `/site-monitoring/report/${id}`,
-    icon: <RemoveRedEyeRounded />,
+
     links: [
       {
-        text: "Report a site monitoring",
-        type: "form",
-        href: "/site-monitoring/report",
-        inputs: siteMonitoringInputs,
-        listHref: "/site-monitoring",
-        hideOnSidebar: true,
-      },
-      {
-        text: (id) => `View site monitoring (Id: ${id})`,
-        type: "view",
-        href: "/site-monitoring/:id",
-        inputs: siteMonitoringInputs,
-        listHref: "/site-monitoring",
-        hideOnSidebar: true,
-      },
-      {
-        text: (id) => `Edit site monitoring (Id: ${id})`,
-        type: "edit",
-        href: "/site-monitoring/report/:id",
-        inputs: siteMonitoringInputs,
-        listHref: "/site-monitoring",
+        text: "Evaluate Risk",
+        type: "custom",
+        href: "/risk-assessment/evaluate",
+        component: <BasicTabsRiskAssesment />,
         hideOnSidebar: true,
       },
     ],
@@ -256,9 +259,56 @@ export const links: LinkType[] = [
     ],
   },
   {
+    text: "Site Monitoring",
+    desc: "Supports real-time inspections to ensure ongoing safety compliance. Supervisors can perform scheduled or random inspections and assign actions on the spot.",
+    features: [
+      "Custom inspection checklists.",
+      "Real-time findings with photos ",
+      "Assign corrective actions directly.",
+      "Trend analysis and KPI dashboard.",
+    ],
+    href: "/site-monitoring",
+    type: "list",
+    inputs: siteMonitoringInputs,
+    columns: siteMonitoringColumns,
+    addHref: "/site-monitoring/report",
+    viewLink: (id) => `/site-monitoring/${id}`,
+    editLink: (id) => `/site-monitoring/report/${id}`,
+    icon: <RemoveRedEyeRounded />,
+    links: [
+      {
+        text: "Report a site monitoring",
+        type: "form",
+        href: "/site-monitoring/report",
+        inputs: siteMonitoringInputs,
+        listHref: "/site-monitoring",
+        hideOnSidebar: true,
+      },
+      {
+        text: (id) => `View site monitoring (Id: ${id})`,
+        type: "view",
+        href: "/site-monitoring/:id",
+        inputs: siteMonitoringInputs,
+        listHref: "/site-monitoring",
+        hideOnSidebar: true,
+      },
+      {
+        text: (id) => `Edit site monitoring (Id: ${id})`,
+        type: "edit",
+        href: "/site-monitoring/report/:id",
+        inputs: siteMonitoringInputs,
+        listHref: "/site-monitoring",
+        hideOnSidebar: true,
+      },
+    ],
+  },
+
+  {
     text: "Safety Data Sheets (SDS)",
+
     href: "/sds",
     desc: "NordSafe integrates with CloudSDS to provide instant access to the latest Safety Data Sheets. All SDS are automatically updated and available in multiple languages. Search, view, and share documents with ease across your organization. Stay compliant with global standards like OSHA, GHS, and REACH. Ensure a safer workplace with centralized chemical safety data.",
+
     features: [
       "Automatic SDS updates in real time",
       "Multi-language SDS support",
@@ -276,13 +326,14 @@ export const links: LinkType[] = [
       href: "/sds/search",
       icon: <SearchRounded />,
     },
+
     links: [
       {
         text: "Search SDS",
         href: "/sds/search",
         type: "custom",
         component: <SDSSearch />,
-        permissions: ["admin", "super-admin"],
+        //permissions: ["admin", "super-admin"],
         hideOnSidebar: true,
         customButton: {
           text: "Saved SDS",
@@ -292,6 +343,77 @@ export const links: LinkType[] = [
       },
     ],
   },
+  // {
+  //   text: "Company settings",
+  //   href: "/company-settings",
+  //   type: "links",
+  //   hideOnSidebar: true,
+  //   layout: SettingsLayout,
+  //   permissions: ["admin", "super-admin"],
+  //   links: [
+  //     {
+  //       text: "Projects",
+  //       href: "/company-settings/projects",
+  //       layout: SettingsLayout,
+  //       type: "list",
+  //       endpoint: "projects",
+  //       columns: projectsColumns,
+  //       actions: projectsActions,
+  //       inputs: projectsInputs,
+  //       addHref: "/company-settings/projects/add",
+  //       dataGridCustomProps: {
+  //         rowHeight: 70,
+  //       },
+  //       icon: <ApartmentRounded />,
+  //       links: [
+  //         {
+  //           layout: SettingsLayout,
+  //           text: "Add a new project",
+  //           href: "/company-settings/projects/add",
+  //           type: "form",
+  //           endpoint: "projects",
+  //           inputs: projectsInputs,
+  //           listHref: "/company-settings/projects",
+  //           hideOnSidebar: true,
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       permissions: ["super-admin"],
+  //       text: "Users",
+  //       href: "/company-settings/users",
+  //       layout: SettingsLayout,
+  //       type: "list",
+  //       endpoint: "users",
+  //       actions: usersActions,
+  //       inputs: usersInputs,
+  //       addHref: "/company-settings/users/add",
+  //       icon: <GroupRounded />,
+  //       links: [
+  //         {
+  //           permissions: ["super-admin"],
+  //           text: "Add a new user",
+  //           href: "/company-settings/users/add",
+  //           type: "form",
+  //           layout: SettingsLayout,
+  //           endpoint: "users",
+  //           inputs: usersInputs,
+  //           listHref: "/company-settings/users",
+  //           hideOnSidebar: true,
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       text: "Subscription",
+  //       href: "/company-settings/subscription",
+  //       type: "custom",
+  //       icon: <ReceiptLongRounded />,
+  //       component: <Subscription />,
+  //       layout: SettingsLayout,
+  //       permissions: ["super-admin"],
+  //     },
+  //   ],
+  // },
   {
     text: "Safety Tools",
     href: "/safety-tools",
@@ -307,7 +429,25 @@ export const links: LinkType[] = [
     icon: <ConstructionRounded />,
     links: [
       {
-        text: "Safety Checklists",
+        text: "Toolbox Meeting Checklist",
+        desc: "Toolbox Meeting – Manage PPE, electrical safety, chemicals, housekeeping, emergency preparedness, and site safety.",
+        href: "/safety-tools/toolbox",
+        type: "custom",
+        component: <Checklists />,
+        hideOnSidebar: true,
+        links: ToolboxController,
+      },
+      {
+        text: "Job safety analysis",
+        desc: "Sikker Jobbanalyse (SJA) – Manage project info, documentation, competence, communication, equipment, and site safety.",
+        href: "/safety-tools/sja",
+        type: "custom",
+        component: <Checklists />, // 👈 الكومبوننت اللي يعرض الفورم/الجدول الخاص بالـ SJA
+        hideOnSidebar: true,
+        links: JsaController, // 👈 المصفوفة اللي فيها الـ inputs والـ forms الخاصة بالـ SJA
+      },
+      {
+        text: "Pre-Task Checklist",
         desc: "This checklist must be completed immediately before execution and preserved as an official record of site conditions and safety measures. Once finalized and approved, it can not be altered. In the event of an incident, it will serve as a reference to confirm that all required measures were in place.",
         href: "/safety-tools/checklists",
         type: "custom",
@@ -315,42 +455,19 @@ export const links: LinkType[] = [
         hideOnSidebar: true,
         links: checklists,
       },
+
+      {
+        text: "Equipment Controller",
+        desc: "Manage and monitor equipment inspections, control dates, and responsible persons. Ensure all tools and protective gear are checked and documented.",
+        href: "/safety-tools/equipment-control",
+        type: "custom",
+        component: <Checklists />,
+        hideOnSidebar: true,
+        links: equipmentControls,
+      },
     ],
   },
- {
-  text: "Risk Assessment",
-  href: "/risk-assessment",
-  type: "custom",
-  icon: <AssessmentRounded />,
-  component: <RiskAssessment />, // ← الكومبونانت اليدوي
-  inputs: riskInputs,
-  columns: riskColumns,
 
-  addHref: "/risk-assessment/evaluate",
-  viewLink: (id) => `/risk-assessment/${id}`,
-  editLink: (id) => `/risk-assessment/evaluate/${id}`,
-
-  desc: "Nordsafe Risk Assessment helps identify, evaluate, and control workplace risks...",
-  features: [
-    "Hazard identification and documentation",
-    "Risk scoring and prioritization",
-    "Customizable assessment templates",
-    "Assign actions and track completion",
-    "Reporting and trend analysis",
-  ],
-
-  links: [
-    {
-      text: "Evaluate Risk",
-      type: "custom",
-      href: "/risk-assessment/evaluate",
-      component: <Soon />,
-      hideOnSidebar: true,
-    },
-  ],
-}
-
-,
   {
     text: "Entrance log",
     href: "/entrance-log",
@@ -392,8 +509,8 @@ export const links: LinkType[] = [
     type: "custom",
     component: <Videos />,
     icon: <YouTube />,
-    hideOnSidebar: true,
-    showOnBottomList: true,
+    hideOnSidebar: false,
+    showOnBottomList: false,
   },
   {
     text: (type) => `Chart for ${type?.replace("-", " ")}`,
@@ -404,12 +521,39 @@ export const links: LinkType[] = [
   },
   {
     text: "Minutes Of Meetings",
-    href: "/minutes-Of-mettings",
+    href: "/minutes-of-meetings",
     type: "custom",
-    component: <MeetingForm />,
     icon: <People />,
-    hideOnSidebar: false,
+    //component: <MeetingTable />,
+    inputs: meetingInputs,
+    component: <MeetingList />,
+
+    addHref: "/minutes-of-meetings/create",
+    viewLink: (id) => `/minutes-of-meetings/${id}`,
+    editLink: (id) => `/minutes-of-meetings/edit/${id}`,
+
+    desc: "Nordsafe Minutes of Meetings helps document, track, and follow up on organizational meetings...",
+    features: [
+      "Structured meeting documentation",
+      "Agenda and discussion tracking",
+      "Action items assignment",
+      "Signatures and approvals",
+      "Search and reporting",
+    ],
+
+    links: [
+      {
+        text: "Minutes of mettings",
+        type: "custom",
+        href: "/minutes-of-meetings/create",
+        component: <TabsSection />,
+        hideOnSidebar: true,
+      },
+    ],
   },
+  // permissions: ["admin", "secretary", "manager"],
+  // meta: { category: "Documentation", order: 3 },
+
   // {
   //   text: "Risk Assessment",
   //   desc: "Facilitates structured evaluation of project risks by scoring likelihood and severity, calculating risk levels, and tracking mitigation actions. Designed to support proactive safety planning and compliance.",

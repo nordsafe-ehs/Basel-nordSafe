@@ -16,6 +16,7 @@ import { MouseEvent, useState } from "react";
 import { API_URL } from "../API_URL";
 import { useAlert } from "../context/AlertContext";
 import { useToken } from "../hooks/useToken";
+import AddSDSDialog from "../components/QRDialog";
 
 interface SDSItem {
   doc_id: string;
@@ -44,6 +45,7 @@ const SDSSearch = () => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(25);
   const { closeAlert, showAlert } = useAlert();
+  const [openDialog, setOpenDialog] = useState(false);
 
   const fetchSDS = async (_page = page, _pageSize = pageSize) => {
     setLoading(true);
@@ -93,24 +95,64 @@ const SDSSearch = () => {
     fetchSDS(0, newSize);
   };
 
-  const handleSave = async (row: SDSItem) => {
-    closeAlert();
+  // const handleSave = async (row: SDSItem) => {
+  //   closeAlert();
 
-    const res = await fetch(API_URL + "/sds", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(row),
-    });
-    const data = await res.json();
+  //   const res = await fetch(API_URL + "/sds", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //     body: JSON.stringify(row),
+  //   });
+  //   const data = await res.json();
 
-    showAlert(data.message, res.ok ? "success" : "error");
-  };
+  //   showAlert(data.message, res.ok ? "success" : "error");
+  // };
+
+  {
+    /* هون ضفت */
+  }
+
+ const handleSave = async (row: SDSItem) => {
+   try {
+     closeAlert();
+     const res = await fetch(API_URL + "/sds", {
+       method: "POST",
+       headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+       },
+       body: JSON.stringify(row),
+     });
+
+     const data = await res.json();
+     showAlert(data.message, res.ok ? "success" : "error");
+   } catch (err) {
+     showAlert("Something went wrong", "error");
+     console.log(err);
+   }
+ };
+
 
   return (
     <>
+      {/* هون ضفت */}
+      <Stack direction="row" justifyContent="flex-end" mb={2}>
+        <Button variant="contained" onClick={() => setOpenDialog(true)}>
+          Add New
+        </Button>
+      </Stack>
+
+      <AddSDSDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        onSave={(newItem) => {
+          setSDSItems((prev) => [newItem, ...prev]);
+        }}
+      />
+
       <Stack
         direction={{ xs: "column", sm: "row" }}
         width={1}
@@ -183,6 +225,7 @@ const SDSSearch = () => {
             onRowsPerPageChange={handlePageSizeChange}
             rowsPerPageOptions={[25, 50, 100]}
           />
+
           <DataGrid
             sx={{ border: 0 }}
             loading={loading}
@@ -284,3 +327,27 @@ const SDSSearch = () => {
 };
 
 export default SDSSearch;
+
+// function onSave(arg0: {
+//   doc_id: string;
+//   product_name: string;
+//   language: string;
+// }) {
+//   throw new Error("Function not implemented.");
+// }
+//  {
+//    /* Add new  هون*/
+//  }
+//  <Stack
+//    sx={{
+//      mb: 3,
+//      display: "flex",
+//      width: "50%", // خلي العرض كامل
+//      justifyContent: "flex-end", // حط المحتوى على اليمين
+//    }}
+//  >
+//    <Button variant="outlined" onClick={() => setOpenQR(true)}>
+//      Add New Qr
+//    </Button>
+//    <QRDialog open={openQR} onClose={() => setOpenQR(false)} />
+//  </Stack>;

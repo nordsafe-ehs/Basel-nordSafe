@@ -2,54 +2,40 @@ import { GridColDef } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
 
 export const riskColumns: GridColDef[] = [
+  { field: "id", headerName: "ID", width: 30, editable: false },
   {
-    field: "id",
-    headerName: "ID",
-    width: 80,
-    editable: false,
-  },
-  { field: "activity_name", headerName: "Activity", flex: 1, editable: true },
-  {
-    field: "identified_hazards",
-    headerName: "Identified Hazards/Risks",
-    flex: 2,
-    editable: true,
-  },
-  {
-    field: "people_involved",
-    headerName: "People Involved",
+    field: "activity",
+    headerName: "Activity",
     flex: 1,
+   
     editable: true,
   },
+  {
+    field: "hazards",
+    headerName: "Hazards",
+    flex: 1,
+  
+    editable: true,
+  },
+  // {
+  //   field: "peopleInvolved",
+  //   headerName: "People Involved",
+  //   flex: 1,
+    
+  //   editable: true,
+  // },
 
   // Base Risk
+  { field: "likelihood", headerName: "L (Base)", width: 100, editable: true },
+  { field: "severity", headerName: "S (Base)", width: 100, editable: true },
   {
-    field: "base_likelihood",
-    headerName: "L (Base)",
-    type: "singleSelect",
-    valueOptions: [1, 2, 3, 4, 5],
-    width: 100,
-    editable: true,
-    valueParser: (value) => Number(value), // ✅ يحول القيمة لرقم
-  },
-  {
-    field: "base_severity",
-    headerName: "S (Base)",
-    type: "singleSelect",
-    valueOptions: [1, 2, 3, 4, 5],
-    width: 100,
-    editable: true,
-    valueParser: (value) => Number(value), // ✅ يحول القيمة لرقم
-  },
-  {
-    field: "base_risk_score",
+    field: "riskScore",
     headerName: "Risk Score (Base)",
-    type: "number",
     width: 140,
     editable: false,
   },
   {
-    field: "base_risk_level",
+    field: "riskRating",
     headerName: "Risk Level (Base)",
     width: 160,
     editable: false,
@@ -89,40 +75,34 @@ export const riskColumns: GridColDef[] = [
   },
 
   {
-    field: "control_measures",
+    field: "controlMeasures",
     headerName: "Control Measures",
-    flex: 2,
+    flex: 1,
+    width: 100,
     editable: true,
   },
 
   // Residual Risk
   {
-    field: "residual_likelihood",
+    field: "residualLikelihood",
     headerName: "L (Residual)",
-    type: "singleSelect",
-    valueOptions: [1, 2, 3, 4, 5],
     width: 120,
     editable: true,
-    valueParser: (value) => Number(value), // ✅ يحول القيمة لرقم
   },
   {
-    field: "residual_severity",
+    field: "residualSeverity",
     headerName: "S (Residual)",
-    type: "singleSelect",
-    valueOptions: [1, 2, 3, 4, 5],
     width: 120,
     editable: true,
-    valueParser: (value) => Number(value), // ✅ يحول القيمة لرقم
   },
   {
-    field: "residual_risk_score",
+    field: "residualRiskScore",
     headerName: "Risk Score (Residual)",
-    type: "number",
     width: 160,
     editable: false,
   },
   {
-    field: "residual_risk_level",
+    field: "residualRiskRating",
     headerName: "Risk Level (Residual)",
     width: 180,
     editable: false,
@@ -162,9 +142,12 @@ export const riskColumns: GridColDef[] = [
   },
 
   {
-    field: "person_responsible",
+    field: "responsiblePerson",
     headerName: "Person Responsible",
     flex: 1,
+    width: 100,
     editable: true,
   },
 ];
+
+

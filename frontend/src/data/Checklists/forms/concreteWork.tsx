@@ -9,6 +9,24 @@ const inputs: Input[] = [
     title: "General Information",
     inputs: [
       {
+        label: "Project name",
+        name: "project name",
+        type: "text",
+        size: "full",
+      },
+      {
+        label: "Date",
+        name: "date",
+        type: "date",
+        size: "full",
+      },
+      {
+        label: "Responsible Person",
+        name: "responsible person",
+        type: "text",
+        size: "full",
+      },
+      {
         label: "Participants / Team members",
         name: "participants",
         type: "textarea",

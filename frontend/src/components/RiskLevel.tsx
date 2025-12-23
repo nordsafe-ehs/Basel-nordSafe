@@ -1,6 +1,6 @@
 import { Box, Collapse, Stack, Typography } from "@mui/material";
 import { useState } from "react";
-import assessmentMatrix from "../assets/assessment-matrix.jpg";
+import assessmentMatrix from "../assets/Annotation 2025-12-18 205957.png";
 import { useTranslation } from "react-i18next";
 
 const RiskLevel = () => {
@@ -24,14 +24,15 @@ const RiskLevel = () => {
       </Typography>
       <Collapse in={open}>
         <Stack
-          direction="row"
-          alignItems="center"
+          direction="column-reverse"
+          alignItems="start"
           gap={2}
           sx={{
             pt: 1,
             img: {
               width: 0.5,
-              borderLeft: "1px solid",
+              // borderLeft: "1px solid",
+              
             },
           }}
         >

@@ -15,10 +15,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { FetchedOption, Input, Option } from "../types/Sidebar";
 
-import { VisibilityOffRounded, VisibilityRounded } from "@mui/icons-material";
+import {
+  AddRounded,
+  VisibilityOffRounded,
+  VisibilityRounded,
+} from "@mui/icons-material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -30,6 +35,7 @@ import { useToken } from "../hooks/useToken";
 import { FormType } from "../types/Form";
 import LocationPicker from "./Inputs/LocationPicker";
 import { useTranslation } from "react-i18next";
+import SignatureField from "./SignatureField";
 
 const InputField = ({
   input,
@@ -188,7 +194,7 @@ const InputField = ({
           />
         ))}
       {label && (
-        <Grid2
+        <Grid2 sx={{background:"#FFFFFF" }}
           size={{
             xs: 12,
             md: size == "full" || onValue || type == "textarea" ? 12 : 6,
@@ -214,7 +220,8 @@ const InputField = ({
                     ))}
                   </Select>
                 </FormControl>
-                {!options.length && (
+
+                {/* {!options.length && (
                   <Typography
                     sx={{
                       a: {
@@ -232,7 +239,7 @@ const InputField = ({
                       {t("add options")}
                     </Typography>
                   </Typography>
-                )}
+                )} */}
               </>
             )
           ) : type == "radio" ? (
@@ -263,7 +270,9 @@ const InputField = ({
                 variant="outlined"
                 fullWidth
                 sx={{
-                  justifyContent: "flex-start",
+                  display: "flex",
+                  justifyContent: "space-between",
+
                   color: "#777",
                   borderColor: "#999",
                   textTransform: "unset",
@@ -282,6 +291,7 @@ const InputField = ({
                   }
                   hidden
                 />
+                <DriveFolderUploadIcon sx={{ color: "#172E4E " }} />
               </Button>
             </>
           ) : type == "time" ? (
@@ -333,6 +343,13 @@ const InputField = ({
               label={label as string}
               value={v as string}
               onChange={(v) => handleChange(v)}
+            />
+          ) : type == "signature" ? (
+            //هنااااااااااااااااا
+            <SignatureField
+              name={name}
+              value={v as string}
+              onChange={(val) => handleChange(val)}
             />
           ) : (
             <Stack position="relative">
@@ -429,8 +446,13 @@ const InputField = ({
       {!deletable && assignRepetitive && handleAddNew && title && (
         <Grid2 size={12}>
           <Stack alignItems="end">
-            <Button variant="contained" onClick={() => handleAddNew(title)}>
+            <Button
+              variant="contained"
+              sx={{ background: "#172E4E" }}
+              onClick={() => handleAddNew(title)}
+            >
               {t("Add new")}
+              <AddRounded />
             </Button>
           </Stack>
         </Grid2>

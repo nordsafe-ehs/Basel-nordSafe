@@ -5,6 +5,12 @@ export const form1Inputs: Input[] = [
     title: "General Information",
     inputs: [
       {
+        label: "Project Name",
+        name: "project_name",
+        type: "text",
+        size: "half",
+      },
+      {
         label: "Date of operation",
         name: "date_of_operation",
         type: "date",

@@ -1,12 +1,12 @@
 import {
   KeyboardArrowDownRounded,
   KeyboardArrowRightRounded,
-  LogoutRounded,
   MenuRounded,
   QrCodeScannerRounded,
   SettingsRounded,
 } from "@mui/icons-material";
 import {
+  Box,
   Button,
   Divider,
   IconButton,
@@ -83,15 +83,15 @@ const Header = ({
       icon: <SettingsRounded />,
       permissions: ["admin", "super-admin"],
     },
-    {
-      text: "Logout",
-      to: "/auth/login",
-      onClick: () => {
-        setToken(null);
-        setActiveProject(null);
-      },
-      icon: <LogoutRounded />,
-    },
+    // {
+    //   text: "Logout",
+    //   to: "/auth/login",
+    //   onClick: () => {
+    //     setToken(null);
+    //     setActiveProject(null);
+    //   },
+    //   //icon: <LogoutRounded />,
+    // },
   ];
 
   return (
@@ -107,11 +107,41 @@ const Header = ({
         sx={{ right: 0 }}
         justifyContent="space-between"
       >
-        <Stack direction="row" gap={0.5}>
+        <Typography
+          display={{ xs: "none", lg: "block" }}
+          mx="auto"
+          fontSize={20}
+          textTransform="capitalize"
+          sx={{
+            backgroundColor: "#F0FFF8",
+            color: "#172E4E",
+            fontWeight: "bold",
+            padding: "8px",
+            paddingX: "60px",
+            borderRadius: "10px",
+            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
+          }}
+        >
+          {t("Where Innovation Meets")}{" "}
+          <Box
+            component="span"
+            sx={{
+              background: "linear-gradient(90deg, #0064FF, #36D399)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              fontWeight: "bold",
+            }}
+          >
+            {t("Sustainability")}
+          </Box>
+        </Typography>
+        <Stack direction="row" sx={{ margin: 2 }} gap={0.5}>
+          <Typography variant="h6" sx={{background:'#F0FFF8' , fontSize:'18px' ,p:'5px '}}>STR Company</Typography>
           <Button
+          
             variant="outlined"
             onClick={(e) => setAnchorEl(e.currentTarget)}
-            sx={{ width: 150, justifyContent: "space-between" }}
+            sx={{ width: 150, justifyContent: "space-between"  }}
           >
             {decodedToken.fullname}
             <KeyboardArrowDownRounded
@@ -211,7 +241,7 @@ const Header = ({
           </Menu>
           <Tooltip title="Record a sign in/out">
             <IconButton
-              sx={{ color: "primary.main" }}
+              sx={{ color: "#172E4E", backgroundColor: "#F0FFF8" }}
               component={Link}
               to="/qr-reader"
             >
@@ -221,7 +251,12 @@ const Header = ({
             <Button
               variant="outlined"
               onClick={(e) => setLanguageAnchorEl(e.currentTarget)}
-              sx={{ width: 120,color:"white" , background:"black" ,  justifyContent: "space-between" }}
+              sx={{
+                width: 80,
+                color: "black",
+                backgroundColor: "#F0FFF8",
+                justifyContent: "space-between",
+              }}
             >
               {i18n.language.toUpperCase()}
               <KeyboardArrowDownRounded />
@@ -271,18 +306,92 @@ const Header = ({
         >
           <MenuRounded />
         </IconButton>
-        <Typography
-          display={{ xs: "none", lg: "block" }}
-          mx="auto"
-          fontSize={20}
-          color="secondary.main"
-          textTransform="capitalize"
-        >
-          {t("Where Innovation Meets Sustainability")}
-        </Typography>
+        
       </Stack>
+
+      
     </>
   );
 };
 
 export default Header;
+
+
+// #0064FF
+// #36D399   #172E4E  #0CB283 
+
+//  <Box width="100%" display="flex" justifyContent="flex-end" mt={2}>
+        //   <Stack
+        //     direction={{ xs: "column", sm: "row" }} // عمودي في الموبايل، أفقي في الشاشات الأكبر
+        //     spacing={{ xs: 1, sm: 2, md: 3 }} // مسافات أصغر في الموبايل وأكبر في الديسكتوب
+        //     mb={2}
+        //   >
+        //     <Button
+        //       variant="outlined"
+        //       component={Link}
+        //       to="/company-settings/projects"
+        //       endIcon={<ApartmentRounded />}
+        //       sx={{
+        //         background: "#F0FFF8",
+        //         color: "#172E4E",
+        //         minWidth: { xs: 100, sm: 120, md: 140 }, // ← يتغير حسب حجم الشاشة
+        //         fontSize: { xs: "0.7rem", sm: "0.8rem", md: "0.9rem" },
+        //         p: { xs: 0.5, sm: 1 },
+        //         borderRadius: 3,
+        //       }}
+        //     >
+        //       Project
+        //     </Button>
+
+        //     <Button
+        //       variant="outlined"
+        //       component={Link}
+        //       to="/company-settings/users"
+        //       endIcon={<GroupRounded />}
+        //       sx={{
+        //         background: "#F0FFF8",
+        //         color: "#172E4E",
+        //         minWidth: { xs: 100, sm: 120, md: 140 },
+        //         fontSize: { xs: "0.7rem", sm: "0.8rem", md: "0.9rem" },
+        //         p: { xs: 0.5, sm: 1 },
+        //         borderRadius: 3,
+        //       }}
+        //     >
+        //       Users
+        //     </Button>
+
+        //     <Button
+        //       variant="outlined"
+        //       component={Link}
+        //       to="/company-settings/subscription"
+        //       endIcon={<ReceiptLongRounded />}
+        //       sx={{
+        //         background: "#F0FFF8",
+        //         color: "#172E4E",
+        //         minWidth: { xs: 100, sm: 120, md: 140 },
+        //         fontSize: { xs: "0.7rem", sm: "0.8rem", md: "0.9rem" },
+        //         p: { xs: 0.5, sm: 1 },
+        //         borderRadius: 3,
+        //       }}
+        //     >
+        //       Subscription
+        //     </Button>
+
+        //     <Button
+        //       variant="contained"
+        //       component={Link}
+        //       to="/company-settings/projects"
+        //       endIcon={<AddRounded />}
+        //       sx={{
+        //         background: "#172E4E",
+        //         color: "#FFFFFF",
+        //         minWidth: { xs: 100, sm: 120, md: 140 },
+        //         fontSize: { xs: "0.7rem", sm: "0.8rem", md: "0.9rem" },
+        //         p: { xs: 0.5, sm: 1 },
+        //         borderRadius: 3,
+        //       }}
+        //     >
+        //       Add New Project
+        //     </Button>
+        //   </Stack>
+        // </Box>

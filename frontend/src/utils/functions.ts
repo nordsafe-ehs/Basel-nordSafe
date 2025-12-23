@@ -135,4 +135,18 @@ export const createPendingDoneInput = (
   };
 };
 
-
+//new
+export const createRiskLevelInput = (label: string): Input => {
+  const name = makeName(label);
+  return {
+    label,
+    name: `${name}_risk_level`,
+    type: "radio",
+    size: "full",
+    options: [
+      { label: "High", value: "high", color: "error" }, 
+      { label: "Medium", value: "medium", color: "warning" }, 
+      { label: "Low", value: "low", color: "success" }, 
+    ],
+  };
+};

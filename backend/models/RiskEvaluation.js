@@ -1,115 +1,66 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
+const Participant = require('./RiskParticipant')
 
-const RiskEvaluation = sequelize.define(
-  "RiskEvaluation",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
+const RiskAssessment = sequelize.define("RiskAssessment", {
+  //headers
 
-    company_name: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
+ 
 
-    document_reference: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
+  // signatureUrl: { type: DataTypes.TEXT, allowNull: true },
 
-    rev_no: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
+ 
 
-    rev_date: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-    },
+  //activity details
+  activity: { type: DataTypes.TEXT, allowNull: true },
+  hazards: { type: DataTypes.TEXT, allowNull: true },
 
-    assessed_by: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
-
-    title: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
-      defaultValue: "Safety Officer",
-    },
-
-    signature: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-
-    // ✅ جدول الأنشطة والمخاطر
-    activity_name: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    identified_hazards: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    people_involved: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-    },
-
-    // Base Risk
-    base_likelihood: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    base_severity: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    base_risk_score: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    base_risk_level: {
-      type: DataTypes.STRING(50),
-      allowNull: true,
-    },
-
-    control_measures: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-
-    // Residual Risk
-    residual_likelihood: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    residual_severity: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    residual_risk_score: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    residual_risk_level: {
-      type: DataTypes.STRING(50),
-      allowNull: true,
-    },
-
-    person_responsible: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-    },
+  likelihood: { type: DataTypes.INTEGER, defaultValue: 1 },
+  severity: { type: DataTypes.INTEGER, defaultValue: 1 },
+  riskScore: { type: DataTypes.INTEGER, defaultValue: 1 },
+  riskRating: {
+    type: DataTypes.ENUM,
+    values: ["Low", "Medium", "High"],
+    defaultValue: "Low",
   },
-  {
-    tableName: "risk_evaluations",
-    timestamps: true,
-  }
-);
+  controlMeasures: { type: DataTypes.TEXT },
+  residualLikelihood: { type: DataTypes.INTEGER, defaultValue: 1 },
+  residualSeverity: { type: DataTypes.INTEGER, defaultValue: 1 },
+  residualRiskScore: { type: DataTypes.INTEGER, defaultValue: 1 },
+  residualRiskRating: {
+    type: DataTypes.ENUM,
+    values: ["Low", "Medium", "High"],
+    defaultValue: "Low",
+  },
+  responsiblePerson: { type: DataTypes.STRING },
+});
 
-module.exports = { RiskEvaluation };
+
+
+
+
+// ✅ دالة لحساب المستوى من الـ score
+function calculateRiskLevel(score) {
+  if (score <= 5) return "Low";
+  if (score <= 12) return "Medium";
+  return "High";
+}
+
+// ✅ Hook واحد يغطي الإنشاء والتحديث
+RiskAssessment.beforeSave((risk) => {
+  // Base Risk
+  const l = risk.getDataValue("likelihood");
+  const s = risk.getDataValue("severity");
+  risk.setDataValue("riskScore", l * s);
+  risk.setDataValue("riskRating", calculateRiskLevel(l * s));
+
+  // Residual Risk
+  const rl = risk.getDataValue("residualLikelihood");
+  const rs = risk.getDataValue("residualSeverity");
+  if (rl && rs) {
+    risk.setDataValue("residualRiskScore", rl * rs);
+    risk.setDataValue("residualRiskRating", calculateRiskLevel(rl * rs));
+  }
+});
+
+module.exports = RiskAssessment;

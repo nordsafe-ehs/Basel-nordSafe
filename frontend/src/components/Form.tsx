@@ -265,7 +265,14 @@ const Form = () => {
 
   return (
     <>
-      <Grid2 container spacing={2} mb={7}>
+      <Grid2
+        container
+        spacing={2}
+        padding={2}
+        color={"#172E4E "}
+        bgcolor={"#F0FFF8"}
+        mb={7}
+      >
         {inputs.map((input) => (
           <InputField
             key={input.name || input.title}
@@ -277,8 +284,8 @@ const Form = () => {
             editForm={editForm}
           />
         ))}
-        <Grid2 size={12}>
-          <FormControlLabel
+        <Grid2 size={12} color={"#172E4E "}>
+          <FormControlLabel 
             control={
               <Checkbox
                 size="small"
@@ -296,13 +303,14 @@ const Form = () => {
       </Grid2>
       <Stack
         sx={{
+
           position: "absolute",
           bottom: 0,
           right: 10,
           p: 2,
           width: { xs: 1, lg: "calc(100vw - 350px - 20px)" },
           zIndex: 1000,
-          bgcolor: "white",
+          background: "white",
         }}
       >
         <Button
@@ -311,6 +319,7 @@ const Form = () => {
           loading={loading}
           variant="contained"
           fullWidth
+          sx={{ background: "#172E4E" }}
         >
           {t("Save")}
         </Button>

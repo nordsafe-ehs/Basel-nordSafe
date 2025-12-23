@@ -25,10 +25,10 @@ const PanelLayout = ({ children }: { children: ReactNode }) => {
         ml={{ xs: 0, lg: 35 }}
         mt={10}
         width={1}
-        boxShadow={{
-          xs: "inset 0px 2px 2px #3a765944",
-          lg: "inset 2px 2px 2px #3a765944",
-        }}
+        // boxShadow={{
+        //   xs: "inset 0px 2px 2px #3a765944",
+        //   lg: "inset 2px 2px 2px #3a765944",
+        // }}
         p={2}
         className="scroll"
         sx={{

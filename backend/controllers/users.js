@@ -298,7 +298,7 @@ const register = async (req, res) => {
     password,
     country,
     fullname,
-   // plan,
+    plan,
     orgNumber,
     phoneNumber,
     email,
@@ -360,13 +360,13 @@ const register = async (req, res) => {
     if (companyEmailExists)
       return res.status(404).json({ message: "Company email must be unique" });
 
-    // const createdPlan = await Plans.create({
-    //   BasePlanId: plan,
-    // });
+    const createdPlan = await Plans.create({
+      BasePlanId: plan,
+    });
 
     const createdCompany = await Companies.create({
       name,
-      //PlanId: createdPlan.id,
+      PlanId: createdPlan.id,
       country,
       orgNumber,
       phoneNumber,

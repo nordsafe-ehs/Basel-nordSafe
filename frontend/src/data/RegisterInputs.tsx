@@ -4,41 +4,118 @@ export const registerInputs: Input[] = [
   {
     subTitle: "Company information:",
     inputs: [
+      // {
+      //   label: "Company country",
+      //   size: "half",
+      //   name: "country",
+      //   type: "select",
+      //   optional: true,
+      //   options: [
+      //     {
+      //       label: "Norway",
+      //       value: "NO",
+      //     },
+      //     {
+      //       label: "Denmark",
+      //       value: "DK",
+      //     },
+      //     {
+      //       label: "Finland",
+      //       value: "FI",
+      //     },
+      //     {
+      //       label: "Sweden",
+      //       value: "SE",
+      //     },
+      //     {
+      //       label: "United States",
+      //       value: "US",
+      //     },
+      //     {
+      //       label: "United Kingdom",
+      //       value: "GB",
+      //     },
+      //     {
+      //       label: "United Arab Emirates",
+      //       value: "AE",
+      //     },
+      //   ],
+      //   onValue: {
+      //     NO: [
+      //       {
+      //         label: "Org number",
+      //         size: "full",
+      //         name: "orgNumber",
+      //         type: "text",
+      //       },
+      //     ],
+      //     DK: [
+      //       {
+      //         label: "CVR number",
+      //         size: "full",
+      //         name: "orgNumber",
+      //         type: "text",
+      //       },
+      //     ],
+      //     FI: [
+      //       {
+      //         label: "Business ID / Y-tunnus",
+      //         size: "full",
+      //         name: "orgNumber",
+      //         type: "text",
+      //       },
+      //     ],
+      //     SE: [
+      //       {
+      //         label: "Organizationsnummer",
+      //         size: "full",
+      //         name: "orgNumber",
+      //         type: "text",
+      //       },
+      //     ],
+      //     US: [
+      //       {
+      //         label: "EIN / Tax ID",
+      //         size: "full",
+      //         name: "orgNumber",
+      //         type: "text",
+      //       },
+      //     ],
+      //     GB: [
+      //       {
+      //         label: "Company number",
+      //         size: "full",
+      //         name: "orgNumber",
+      //         type: "text",
+      //       },
+      //     ],
+      //     AE: [
+      //       {
+      //         label: "TRN",
+      //         size: "full",
+      //         name: "orgNumber",
+      //         type: "text",
+      //       },
+      //     ],
+      //   },
+      // },
+      
+      
       {
         label: "Company country",
         size: "half",
         name: "country",
         type: "select",
-        optional:true,
+        optional: true,
         options: [
-          {
-            label: "Norway",
-            value: "NO",
-          },
-          {
-            label: "Denmark",
-            value: "DK",
-          },
-          {
-            label: "Finland",
-            value: "FI",
-          },
-          {
-            label: "Sweden",
-            value: "SE",
-          },
-          {
-            label: "United States",
-            value: "US",
-          },
-          {
-            label: "United Kingdom",
-            value: "GB",
-          },
-          {
-            label: "United Arab Emirates",
-            value: "AE",
-          },
+          { label: "Norway", value: "NO" },
+          { label: "Denmark", value: "DK" },
+          { label: "Finland", value: "FI" },
+          { label: "Sweden", value: "SE" },
+          { label: "United States", value: "US" },
+          { label: "United Kingdom", value: "GB" },
+          { label: "United Arab Emirates", value: "AE" },
+          { label: "Other", value: "OTHER" }, // خيار جديد
         ],
         onValue: {
           NO: [
@@ -89,16 +166,19 @@ export const registerInputs: Input[] = [
               type: "text",
             },
           ],
-          AE: [
+          AE: [{ label: "TRN", size: "full", name: "orgNumber", type: "text" }],
+          OTHER: [
             {
-              label: "TRN",
+              label: "Specify country",
               size: "full",
-              name: "orgNumber",
+              name: "customCountry",
               type: "text",
+              required: true,
             },
-          ],
+          ], // يظهر فقط إذا اختار Other
         },
       },
+
       {
         label: "Company name",
         size: "full",

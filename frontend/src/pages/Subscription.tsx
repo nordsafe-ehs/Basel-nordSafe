@@ -1,4 +1,4 @@
-import { Button, Grid2, LinearProgress, Typography } from "@mui/material";
+import { Box, Button, Grid2, LinearProgress, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { API_URL } from "../API_URL";
@@ -55,13 +55,13 @@ const SubscriptionPage: React.FC = () => {
 
   return (
     <>
-      <Typography variant="h6" fontWeight={700} color="primary">
+      <Typography variant="h5" fontWeight={700} color="#172E4E">
         {t("Current Plan")}
       </Typography>
 
       {subscription?.status === "trial" && (
-        <>
-          <Typography>{t("Free Trial")}</Typography>
+        <Box sx={{ background: "#F0FFF8", p: 1 }}>
+          <Typography color="#172E4E">{t("Free Trial")}</Typography>
           <Typography>
             Trial ends in{" "}
             {Math.ceil(
@@ -72,7 +72,7 @@ const SubscriptionPage: React.FC = () => {
             days (
             {new Date(subscription?.subscriptionEndsAt).toLocaleDateString()})
           </Typography>
-        </>
+        </Box>
       )}
 
       {subscription?.status === "active" && (
@@ -99,8 +99,8 @@ const SubscriptionPage: React.FC = () => {
 
       {(subscription?.status === "trial" ||
         subscription?.status === "active") && (
-        <>
-          <Typography variant="h6" fontWeight={700} color="primary">
+        <Box sx={{ background: "#F0FFF8", p: 1 }}>
+          <Typography variant="h6" fontWeight={700} color="#172E4E">
             {t("Usage Overview")}
           </Typography>
           <Grid2 container columnSpacing={2}>
@@ -137,7 +137,7 @@ const SubscriptionPage: React.FC = () => {
               </>
             )}
           </Grid2>
-        </>
+        </Box>
       )}
 
       <Typography variant="h6" fontWeight={700} color="primary">

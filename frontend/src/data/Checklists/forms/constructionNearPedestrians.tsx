@@ -9,6 +9,25 @@ const inputs: Input[] = [
     title: "General Information",
     inputs: [
       {
+        label: "Project Name",
+        name: "project_name",
+        type: "text",
+        size: "full",
+      },
+      { label: "Location", name: "location", type: "text", size: "full" },
+      {
+        label: "Date of Work",
+        name: "date_of_work",
+        type: "date",
+        size: "half",
+      },
+      {
+        label: "Responsible Person",
+        name: "responsible_person",
+        type: "text",
+        size: "half",
+      },
+      {
         label: "Participants / Team members",
         name: "participants_team_members",
         type: "textarea",
@@ -219,3 +238,4 @@ export const constructionNearPedestrians: LinkType = {
     },
   ],
 };
+

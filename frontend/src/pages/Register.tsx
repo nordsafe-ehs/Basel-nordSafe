@@ -53,30 +53,66 @@ const Register = () => {
       setForm((prev) => ({ ...prev, plan: searchParams.get("planid") || "" }));
   }, [form, searchParams]);
 
-  const handleSubmit = async (e: FormEvent) => {
-    setSeverity("error");
-    setOpen(false);
-    setMessage("");
-    e.preventDefault();
-    setLoading(true);
+  // const handleSubmit = async (e: FormEvent) => {
+  //   setSeverity("error");
+  //   setOpen(false);
+  //   setMessage("");
+  //   e.preventDefault();
+  //   setLoading(true);
 
-    const res = await fetch(API_URL + "/users/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    });
-    const data = await res.json();
-    setLoading(false);
-    setOpen(true);
-    setMessage(data.message);
-    if (!res.ok) return;
-    setSeverity("success");
-    setTimeout(() => {
-      navigate("/");
-    }, 1000);
-  };
+  //   const res = await fetch(API_URL + "/users/register", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(form),
+  //   });
+  //   const data = await res.json();
+  //   setLoading(false);
+  //   setOpen(true);
+  //   setMessage(data.message);
+  //   if (!res.ok) return;
+  //   setSeverity("success");
+  //   setTimeout(() => {
+  //     navigate("/");
+  //   }, 1000);
+  // };
+
+ const handleSubmit = async (e: FormEvent) => {
+   e.preventDefault();
+   setSeverity("error");
+   setOpen(false);
+   setMessage("");
+
+   // ✅ تحقق من الحقول المطلوبة
+   if (form.country && form.country !== "OTHER" && !form.orgNumber) {
+     setMessage("Company organization number is required");
+     setOpen(true);
+     return;
+   }
+   if (form.country === "OTHER" && !form.customCountry) {
+     setMessage("Please specify your country");
+     setOpen(true);
+     return;
+   }
+
+   setLoading(true);
+
+   const res = await fetch(API_URL + "/users/register", {
+     method: "POST",
+     headers: { "Content-Type": "application/json" },
+     body: JSON.stringify(form),
+   });
+   const data = await res.json();
+
+   setLoading(false);
+   setOpen(true);
+   setMessage(data.message);
+   if (!res.ok) return;
+   setSeverity("success");
+   setTimeout(() => navigate("/"), 1000);
+ };
+
 
   return (
     <Stack py={5} px={2} alignItems="center" justifyContent="center">
